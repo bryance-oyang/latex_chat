@@ -1,0 +1,229 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Pond</title>
+
+<style>
+html {
+  overflow: hidden;
+}
+body {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  overflow: hidden;
+}
+
+input[type=text] {
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+
+.msg_p {
+  flex: 0 0 auto;
+  margin: 0.36rem 0 0.36rem 0;
+}
+
+.msg_timestamp {
+  color: #6c757d;
+  display: none;
+}
+
+.msg_username {
+  font-weight: bold;
+}
+
+.msg_content {
+}
+
+.username_list_username {
+  margin: 0.36rem 0 0.36rem 0;
+}
+
+#content {
+  display:flex;
+  flex-direction: column;
+  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  height: 100%;
+  width: 100%;
+}
+
+#title_bar {
+  display: flex;
+  flex: 0 0 auto;
+  background-color: #0BABD4;
+  height: 40px;
+  width: 100%;
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,0.16);
+  align-items: center;
+  z-index: 1000;
+}
+
+#title {
+  flex: 0 0 auto;
+  margin: 5px 10px 5px 16px;
+}
+
+#title h2 {
+  color: #eeeeee;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  font-weight: normal;
+  font-size:1.5rem;
+}
+
+#main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 40px);
+  z-index: 0;
+  overflow: auto;
+}
+
+#sidebar {
+  flex: 0 3 14rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #343a40;
+  height: 100%;
+  max-width: 14rem;
+  z-index: 0;
+}
+
+#username_list_heading {
+  flex: 0 0 auto;
+  margin: 2rem 3rem 0rem 2rem;
+}
+
+#username_list_heading h3 {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  font-weight: normal;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+#username_list {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  color: #eeeeee;
+  font-weight: bold;
+  overflow: hidden;
+  margin: 0.6rem 0 0 1rem;
+}
+
+#chatbar {
+  flex: 1 1 36rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  height: 100%;
+  min-width: 26em;
+  z-index: 10;
+}
+
+#prev_msg {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 1rem 1rem 1rem 1rem;
+  z-index: 0;
+}
+
+#chat_footer {
+  flex: 0 0 auto;
+  background-color: #ffffff;
+  padding: 0rem 1.6rem 1.6rem 1.6rem;
+  border-top: 1px solid rgba(0,0,0,0.16);
+  z-index: 10;
+  box-shadow: 0 -2px 10px 0 rgba(0,0,0,0.06);
+}
+
+#status_box {
+  margin: 0.3rem 0 0.6rem 1rem;
+}
+
+#new_msg_preview {
+  margin: 0.3rem 0 0rem 0;
+}
+
+</style>
+  </head>
+  <body>
+    <div class="modal fade" id="enter_username_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Enter your name</h5>
+          </div>
+          <div class="modal-body">
+            <input type="text" id="username_input" class="form-control">
+            <div id="enter_username_modal_error" class=></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="enter_username_modal_button" onclick="submit_username()">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="content">
+      <div id="title_bar">
+        <div id="title">
+          <h2>Pond</h2>
+        </div>
+      </div>
+
+      <div id="main">
+        <div id="sidebar">
+          <div id="username_list_heading">
+            <h3>Ducks</h3>
+          </div>
+          <div id="username_list">
+          </div>
+        </div>
+
+        <div id="chatbar">
+          <div id="prev_msg">
+          </div>
+          <div id="chat_footer">
+            <div id="status_box">
+              <span style="color:#6c757d;">Connection Status: </span><span id="status" style="color:orange">Initializing...</span>
+            </div>
+
+            <div id="user_response">
+              <label for="msg_area">Chat</label>
+              <input type="text" class="form-control" id="msg_area">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <!--
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    -->
+    <script src="chat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
